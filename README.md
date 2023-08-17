@@ -151,16 +151,86 @@ public enum AbcKey implements SqlKey {
 ```
 
 * Declare SqlKey with EXAMPLE <br />
-![Alt text](screenshots/11.PNG?raw=true)
+```java
+    //EXAMPLE
+    RENT_AREA ("rentarea", Range.class, SqlQuery.builder()
+            .select("rentarea.id AS \"rentarea.Id\"",
+                    "rentarea.value AS \"rentarea.Value\"")
+            .from("building")
+            .where(SqlQuery.builder()
+                    .select("*")
+                    .from("rentarea")
+                    .whereWithoutValue("rentarea.buildingid = building.id")
+                    .where("rentarea.value")
+                    .build()
+            ).build()
+    ),
+
+    RENT_TYPES ("types", CodeSet.class, SqlQuery.builder()
+        .select("renttype.id AS \"renttype.Id\"",
+                "renttype.code AS \"renttype.Code\"",
+                "renttype.name AS \"renttype.Name\"")
+        .from("building")
+        .joinWith(
+            SqlJoin.builder()
+            .type(SqlJoin.Type.INNER_JOIN)
+            .join("buildingrenttype")
+            .on("building.id = buildingrenttype.buildingid").done(),
+
+            SqlJoin.builder()
+            .type(SqlJoin.Type.INNER_JOIN)
+            .join("renttype")
+            .on("renttype.id = buildingrenttype.renttypeid").done()
+        )
+        .where("renttype.code").build()
+    )
+```
 
 
 * Then create SqlMap<Key> with LinkedSqlMap implement
     - Add Scope if u need to set base statement
     - put to Map with key is SqlKey and value is parameter value
     - or **auto put** with putAll method require Map<String, ?> and SqlKey type
-![Alt text](screenshots/9.PNG?raw=true)
+```java
+    public Optional<BuildingModel> findOne(Long id) {
+        ValidateUtils.requireNonNull(id);
+        SqlMap<BuildingKey> statements = new LinkedSqlMap<>();
+        statements.addScope(BuildingKey.ALL);
+        statements.put(BuildingKey.ID, id);
+        List<Building> results = buildingRepository.findByCondition(statements);
+        return results.stream().findFirst().map(buildingConverter::toModel);
+    }
+
+    public List<BuildingSearchResponse> findByCondition(Map<String, ?> params) {
+        ValidateUtils.requireValidParams(params);
+        SqlMap<BuildingKey> statements = new LinkedSqlMap<>();
+        statements.addScope(BuildingKey.SHORTEN);
+        statements.putAll(params, BuildingKey.class);
+        List<Building> results = buildingRepository.findByCondition(statements);
+        return buildingConverter.toSearchResponse(results);
+    }
+```
 
 * Create SqlBuilderFactory based on action description(query, insert, update, delete, count, ...)
     - get SqlBuilder from Factory then generate sql with build() call
     - get SqlExecutor from Factory then execute sql with executeQuery(sql, Entity.class)
-![Alt text](screenshots/8.PNG?raw=true)
+```java
+    public List<Building> findByCondition(Map<?, ?> conditions) {
+        return findByCondition(conditions, -1, -1);
+    }
+
+    public List<Building> findByCondition(Map<?, ?> conditions, int limit, int offset) {
+        SqlMap<?> statements = (SqlMap<?>) conditions;
+        SqlBuilderFactory factory = SqlBuilderFactory.newInstance("query", statements);
+        SqlBuilder builder = factory.getBuilder();
+        SqlExecutor executor = factory.getExecutor();
+        //builder.limit(limit);
+        //builder.offset(offset);
+        try {
+            String sql = builder.build();
+            return executor.executeQuery(sql, Building.class);
+        } catch (SQLSyntaxErrorException e) {
+            throw new ErrorRepositoryException(e);
+        }
+    }
+```
