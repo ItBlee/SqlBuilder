@@ -101,8 +101,67 @@ Java Reflection, Java Generic, Java Annotation, JDBC
 
 ### Use
 
+* First, implement the SqlKey with enum
+SqlKey structure
+```java
+public enum AbcKey implements SqlKey {
+    private final String param;
+    private final Class<?> fieldType;
+    private final SqlStatement statement;
 
-## Screenshots
+    AbcKey(SqlStatement statement) {
+        if (statement == null)
+            throw new IllegalArgumentException();
+        this.param = "";
+        this.fieldType = Object.class;
+        this.statement = statement;
+    }
 
-Certification <br />
-![Alt text](screenshots/1.PNG?raw=true)
+    AbcKey(String param, Class<?> fieldType, SqlStatement statement) {
+        StringUtils.requireNonBlank(param);
+        if (fieldType == null)
+            throw new IllegalArgumentException();
+        this.param = param;
+        this.fieldType = fieldType;
+        this.statement = statement;
+    }
+
+    @Override
+    public SqlStatement getStatement() {
+        return statement;
+    }
+
+    @Override
+    public String getParamName() {
+        return param;
+    }
+
+    @Override
+    public Class<?> getType() {
+        return fieldType;
+    }
+
+    @Override
+    public boolean isScope() {
+        return StringUtils.isBlank(getParamName())
+                && getType() == Object.class
+                && statement != null;
+    }
+}
+```
+
+* Declare SqlKey
+<br />
+![Alt text](screenshots/11.PNG?raw=true)
+
+
+* Then create SqlMap<Key> with LinkedSqlMap implement
+    - Add Scope if u need to set base statement
+    - put to Map with key is SqlKey and value is parameter value
+    - or auto put with putAll method require Map<String, ?> and SqlKey type
+![Alt text](screenshots/9.PNG?raw=true)
+
+* Create SqlBuilderFactory based on action description(query, insert, update, delete, count, ...)
+    - get SqlBuilder from Factory then generate sql with build() call
+    - get SqlExecutor from Factory then execute sql with executeQuery(sql, Entity.class)
+![Alt text](screenshots/8.PNG?raw=true)

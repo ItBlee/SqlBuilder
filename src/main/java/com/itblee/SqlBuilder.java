@@ -1,6 +1,6 @@
-package com.itblee.repository.sqlbuilder;
+package com.itblee;
 
-import com.itblee.repository.sqlbuilder.model.SqlQuery;
+import com.itblee.model.SqlQuery;
 import com.itblee.util.StringUtils;
 import com.itblee.util.ValidateUtils;
 

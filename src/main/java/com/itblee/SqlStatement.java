@@ -1,4 +1,4 @@
-package com.itblee.repository.sqlbuilder;
+package com.itblee;
 
 import java.util.Set;
 
