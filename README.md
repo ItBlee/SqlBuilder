@@ -96,7 +96,7 @@ Java Reflection, Java Generic, Java Annotation, JDBC
             AND user.id = 2
 ```
 
-* Map ResultSet to Entity
+* Map ResultSet to Entity <br />
 ![Alt text](screenshots/6.PNG?raw=true)
 
 ### Use
@@ -150,8 +150,7 @@ public enum AbcKey implements SqlKey {
 }
 ```
 
-* Declare SqlKey
-<br />
+* Declare SqlKey <br />
 ![Alt text](screenshots/11.PNG?raw=true)
 
 
