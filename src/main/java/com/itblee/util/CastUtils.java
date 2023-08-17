@@ -1,8 +1,8 @@
 package com.itblee.util;
 
-import com.itblee.model.Code;
-import com.itblee.model.CodeList;
-import com.itblee.model.CodeSet;
+import com.itblee.repository.sqlbuilder.model.Code;
+import com.itblee.repository.sqlbuilder.model.CodeList;
+import com.itblee.repository.sqlbuilder.model.CodeSet;
 import org.apache.commons.lang.math.NumberUtils;
 
 import java.sql.Date;

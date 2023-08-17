@@ -1,4 +1,4 @@
-package com.itblee;
+package com.itblee.repository.sqlbuilder;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -1,4 +1,4 @@
-package com.itblee;
+package com.itblee.repository.sqlbuilder;
 
 import java.util.List;
 

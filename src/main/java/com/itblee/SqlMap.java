@@ -1,6 +1,6 @@
-package com.itblee;
+package com.itblee.repository.sqlbuilder;
 
-import com.itblee.model.Range;
+import com.itblee.repository.sqlbuilder.model.Range;
 
 import java.util.Map;
 import java.util.function.BiFunction;

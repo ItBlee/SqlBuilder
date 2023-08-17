@@ -31,7 +31,7 @@ public final class ConnectionUtils {
         return dbSource;
     }
 
-    public static Connection createConnection() throws SQLException {
+    public static Connection createConnection() throws SQLException, ClassNotFoundException {
         return getDataSource().getConnection();
     }
 
