@@ -150,14 +150,14 @@ public enum AbcKey implements SqlKey {
 }
 ```
 
-* Declare SqlKey <br />
+* Declare SqlKey with EXAMPLE <br />
 ![Alt text](screenshots/11.PNG?raw=true)
 
 
 * Then create SqlMap<Key> with LinkedSqlMap implement
     - Add Scope if u need to set base statement
     - put to Map with key is SqlKey and value is parameter value
-    - or auto put with putAll method require Map<String, ?> and SqlKey type
+    - or **auto put** with putAll method require Map<String, ?> and SqlKey type
 ![Alt text](screenshots/9.PNG?raw=true)
 
 * Create SqlBuilderFactory based on action description(query, insert, update, delete, count, ...)
